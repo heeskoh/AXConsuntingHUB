@@ -227,6 +227,284 @@ const app = createApp({
         else { referenceFiles.value = []; }
     });
 
+//-----------------------------------------------------------------------------------------
+
+document.addEventListener('DOMContentLoaded', function () {
+    const mainMenuContainer = document.getElementById('main-menu-container');
+    const workPanel = document.getElementById('work-panel');
+    const chatPanel = document.getElementById('chat-panel');
+    const sourcePanel = document.getElementById('source-panel');
+
+    // ax_methodology_tasks.json에서 과업 데이터를 불러와 메인 메뉴를 생성합니다.
+    fetch('/ax_methodology_tasks.json')
+        .then(response => response.json())
+        .then(data => {
+            createMainMenu(data.tasks);
+        });
+
+    /**
+     * 메인 메뉴 UI를 생성합니다.
+     * @param {Array} tasks - ax_methodology_tasks.json에서 불러온 과업 배열
+     */
+    function createMainMenu(tasks) {
+        tasks.forEach(task => {
+            const menuItem = document.createElement('div');
+            menuItem.className = 'main-menu-item';
+            menuItem.textContent = task.name;
+            menuItem.dataset.taskId = task.id;
+
+            menuItem.addEventListener('click', () => {
+                // 이전에 선택된 메뉴의 'active' 클래스를 제거합니다.
+                document.querySelectorAll('.main-menu-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                // 현재 클릭된 메뉴에 'active' 클래스를 추가합니다.
+                menuItem.classList.add('active');
+
+                // 메뉴 유형에 따라 다른 동작을 수행합니다.
+                if (task.id === "0") { // "AX방법론" 메뉴
+                    displayMethodologyInfo(task);
+                } else { // 다른 모든 컨설팅 단계 메뉴
+                    displaySubTasks(task);
+                }
+            });
+            mainMenuContainer.appendChild(menuItem);
+        });
+    }
+
+    /**
+     * "AX방법론" 메뉴의 정보를 work-panel에 표시합니다.
+     * @param {object} task - 선택된 메뉴의 과업 객체
+     */
+    function displayMethodologyInfo(task) {
+        workPanel.innerHTML = `
+            <h2>${task.name}</h2>
+            <p>${task.description}</p>
+        `;
+        // AX 방법론 선택 시 채팅 및 소스 패널 초기화
+        chatPanel.innerHTML = '';
+        sourcePanel.innerHTML = '';
+    }
+
+    /**
+     * 컨설팅 단계별 하위 과업 버튼들을 work-panel에 표시합니다.
+     * @param {object} task - 선택된 메뉴의 과업 객체
+     */
+    function displaySubTasks(task) {
+        workPanel.innerHTML = `<h2>${task.name}</h2>`;
+        chatPanel.innerHTML = ''; // 새 메뉴 선택 시 채팅 패널 초기화
+        sourcePanel.innerHTML = ''; // 새 메뉴 선택 시 소스 패널 초기화
+
+        const subTaskButtonsContainer = document.createElement('div');
+        subTaskButtonsContainer.className = 'sub-task-buttons-container';
+
+        task.sub_tasks.forEach(subTask => {
+            const button = document.createElement('button');
+            button.className = 'sub-task-button';
+            button.textContent = subTask.name;
+            // 각 버튼에 고유한 sub_task id를 데이터로 저장합니다.
+            button.dataset.taskId = subTask.id; 
+            subTaskButtonsContainer.appendChild(button);
+        });
+
+        const promptContainer = document.createElement('div');
+        promptContainer.id = 'prompt-container';
+
+        workPanel.appendChild(subTaskButtonsContainer);
+        workPanel.appendChild(promptContainer);
+
+        // 이벤트 위임을 사용하여 하위 과업 버튼 클릭을 처리합니다.
+        subTaskButtonsContainer.addEventListener('click', (event) => {
+            if (event.target.classList.contains('sub-task-button')) {
+                // 모든 버튼의 'active' 상태를 제거합니다.
+                subTaskButtonsContainer.querySelectorAll('.sub-task-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                // 현재 클릭된 버튼을 'active' 상태로 만듭니다.
+                event.target.classList.add('active');
+                
+                // 버튼에 저장된 task id를 기반으로 프롬프트 파일 경로를 생성합니다.
+                const taskId = event.target.dataset.taskId;
+                const promptFile = `data/${taskId}_prompt.json`; 
+                
+                loadPromptTemplate(promptFile, taskId, promptContainer);
+            }
+        });
+    }
+
+    /**
+     * 백엔드에서 프롬프트 템플릿을 불러와 UI에 표시합니다.
+     * @param {string} promptFile - 불러올 프롬프트 파일 경로
+     * @param {string} taskId - 현재 과업 ID
+     * @param {HTMLElement} container - 프롬프트 UI를 표시할 컨테이너 요소
+     */
+    async function loadPromptTemplate(promptFile, taskId, container) {
+        try {
+            const response = await fetch('/api/get_prompt_template', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ path: promptFile })
+            });
+            if (!response.ok) {
+                // 404 Not Found 에러가 발생하면 사용자에게 명확한 메시지를 보여줍니다.
+                if (response.status === 404) {
+                     container.innerHTML = `<p class="error">해당 과업의 프롬프트 파일(${promptFile})을 찾을 수 없습니다.</p>`;
+                     return;
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const prompts = await response.json();
+            displayPromptUI(prompts, taskId, container);
+        } catch (error) {
+            console.error("Error loading prompt template:", error);
+            container.innerHTML = `<p class="error">프롬프트 템플릿을 불러오는 데 실패했습니다.</p>`;
+        }
+    }
+
+    /**
+     * 프롬프트 선택 및 편집 UI를 생성합니다.
+     * @param {Array|object} prompts - 불러온 프롬프트 템플릿 데이터
+     * @param {string} taskId - 현재 과업 ID
+     * @param {HTMLElement} container - 프롬프트 UI를 표시할 컨테이너 요소
+     */
+    function displayPromptUI(prompts, taskId, container) {
+        container.innerHTML = ''; // 이전 내용을 초기화합니다.
+        const promptData = Array.isArray(prompts) ? prompts : [prompts];
+
+        const promptWrapper = document.createElement('div');
+        promptWrapper.className = 'prompt-wrapper';
+
+        // 프롬프트가 여러 개일 경우 선택 UI를 생성합니다.
+        if (promptData.length > 1) {
+            const selectLabel = document.createElement('label');
+            selectLabel.for = 'prompt-selector';
+            selectLabel.textContent = '프롬프트 템플릿 선택: ';
+
+            const select = document.createElement('select');
+            select.id = 'prompt-selector';
+            promptData.forEach((prompt, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = prompt.name || `템플릿 ${index + 1}`;
+                select.appendChild(option);
+            });
+            
+            const selectorWrapper = document.createElement('div');
+            selectorWrapper.className = 'prompt-selector-wrapper';
+            selectorWrapper.appendChild(selectLabel);
+            selectorWrapper.appendChild(select);
+            promptWrapper.appendChild(selectorWrapper);
+
+            select.addEventListener('change', (event) => {
+                const selectedPrompt = promptData[event.target.value];
+                updatePromptContent(selectedPrompt, taskId, promptWrapper);
+            });
+            // 기본으로 첫 번째 프롬프트를 표시합니다.
+             updatePromptContent(promptData[0], taskId, promptWrapper);
+        } else {
+            // 프롬프트가 하나일 경우 바로 표시합니다.
+             updatePromptContent(promptData[0], taskId, promptWrapper);
+        }
+        
+        container.appendChild(promptWrapper);
+    }
+    
+    /**
+     * 프롬프트 내용(textarea, 전송 버튼)을 업데이트하거나 생성합니다.
+     * @param {object} prompt - 표시할 프롬프트 객체
+     * @param {string} taskId - 현재 과업 ID
+     * @param {HTMLElement} wrapper - 프롬프트 UI를 감싸는 요소
+     */
+    function updatePromptContent(prompt, taskId, wrapper) {
+        // 기존의 content-area가 있다면 삭제합니다.
+        let contentArea = wrapper.querySelector('.prompt-content-area');
+        if (contentArea) {
+            contentArea.remove();
+        }
+
+        // 새로운 content-area를 생성합니다.
+        contentArea = document.createElement('div');
+        contentArea.className = 'prompt-content-area';
+
+        const textarea = document.createElement('textarea');
+        textarea.id = 'prompt-textarea';
+        textarea.value = prompt.prompt;
+
+        const executeButton = document.createElement('button');
+        executeButton.id = 'execute-prompt-button';
+        executeButton.textContent = '전송';
+        
+        executeButton.addEventListener('click', () => {
+             const userPrompt = textarea.value;
+             executeTask(taskId, userPrompt);
+        });
+
+        contentArea.appendChild(textarea);
+        contentArea.appendChild(executeButton);
+        wrapper.appendChild(contentArea);
+    }
+
+
+    /**
+     * 과업을 실행하고 결과를 각 패널에 표시합니다.
+     * @param {string} taskId - 실행할 과업의 ID
+     * @param {string} [promptOverride] - 사용자가 수정한 프롬프트 내용
+     */
+    async function executeTask(taskId, promptOverride = null) {
+        chatPanel.innerHTML = '<div class="loader">작업을 처리 중입니다...</div>';
+        sourcePanel.innerHTML = '';
+        
+        try {
+            const payload = {
+                task_id: taskId,
+                prompt: promptOverride
+            };
+
+            const response = await fetch('/api/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            // 채팅 패널 업데이트
+            chatPanel.innerHTML = `
+                <div class="message user-message">
+                    <p><strong>You:</strong> ${result.user_prompt}</p>
+                </div>
+                <div class="message bot-message">
+                    <p><strong>AI:</strong> ${result.response}</p>
+                </div>
+            `;
+            
+            // 소스 패널 업데이트 (소스가 있는 경우)
+            if (result.sources && result.sources.length > 0) {
+                 sourcePanel.innerHTML = `<h3>참조 자료</h3>`;
+                 const sourceList = document.createElement('ul');
+                 result.sources.forEach(source => {
+                     const item = document.createElement('li');
+                     item.textContent = source;
+                     sourceList.appendChild(item);
+                 });
+                 sourcePanel.appendChild(sourceList);
+            }
+
+        } catch (error) {
+            console.error('Error executing task:', error);
+            chatPanel.innerHTML = `<p class="error">작업 실행 중 오류가 발생했습니다: ${error.message}</p>`;
+        }
+    }
+});
+
+//-----------------------------------------------------------------------------------------
+
     // --- 4. 초기화 ---
     fetchAxMethodology();
 
