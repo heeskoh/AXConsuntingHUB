@@ -1,0 +1,88 @@
+{
+  "original_file_name": "NHSB ISP_환경분석서_202405_v1.0.pdf",
+  "reportTitle": "NH저축은행 정보화전략계획(ISP) 환경분석서",
+  "reportDate": "2024.05.10",
+  "sections": [
+    {
+      "title": "I. 디지털 동향 분석",
+      "subSections": [
+        {
+          "title": "1. Customer eXperience",
+          "subSubSections": [
+            {
+              "title": "1.1 Customer eXperience의 정의",
+              "summary": "고객경험(CX)은 기업과 고객의 다양한 상호작용을 통해 형성되는 종합적인 반응. 고객이 서비스와의 관계에서 접하는 모든 여정 상의 경험의 총체. 고객 여정 지도(Customer Journey Map)를 활용하여 고객의 문제 상황, 니즈, 인식을 이해하고,  최종적으로 고객 경험 개선을 통해 비즈니스 목표 달성."
+            },
+            {
+              "title": "1.2 Customer eXperience의 필요성",
+              "summary": "온라인/오프라인 채널 연계를 통한 Seamless한 업무 처리 제공 및 고객 중심의 최적 서비스 제공을 통해 고객 경험 향상.  신규/기존 고객의 다양한 니즈와 욕구 해결 방안 필요. 고객의 Real Voice를 반영하여 고객과의 신뢰 및 은행 이미지 제고, 진정한 고객 가치 발굴."
+            },
+            {
+              "title": "1.3 Customer eXperience 효과",
+              "summary": "서비스 여정 전 단계에 걸친 고객 경험을 느끼고 개선 기회 발굴. 고객 눈높이에 맞는 Pain Point 개선 및 서비스 기회 발굴. 고객 경험 전체 흐름 파악, 이슈에 대한 공감대 형성. 고객 만족도 제고 및 신규 고객 창출 기회 확보."
+            },
+            {
+              "title": "1.4 금융시장 내 Customer eXperience 활용 사례",
+              "summary": "비대면 및 대면 채널 간 Seamless한 고객 경험 분석, 고객 행동별 대응 체계 수립, 채널별 콘텐츠 최적화를 통한 고객 맞춤형 서비스 제공.  Online/Offline 채널 연계를 통한 고객 관리 효율성 강화. 고객 여정 단계별 접근 시점에 따라 상담/판매 효율화."
+            },
+            {
+              "title": "1.5 Customer eXperience 사례 (토스, 카카오뱅크)",
+              "summary": "토스: 고객 중심 혁신, 사용자 편의성 강조(간편성, 직관성, 단순성), 중/저신용자 대상 혁신적인 대출 서비스 제공.  카카오뱅크: 직관적이고 편리한 사용자 경험 제공(간결성, 즐거움), 자체 신용 평가 모형 활용, 다건 이체, 모임 통장, 재미있는 수신 상품(저금통, 26주 적금) 제공."
+            }
+          ]
+        },
+        {
+          "title": "2. Digital Contents",
+          "subSubSections": [
+            {
+              "title": "2.1 Digital Contents의 정의",
+              "summary": "금융회사가 고객에게 전달하는 정보, 상품, 서비스. 디지털 기술을 이용한 콘텐츠로 고객 유입 증가 및 교차 판매 달성.  고객 특성에 맞는 상품 개발 및 디지털 기술 활용을 통한 새로운 고객 경험 제공이 중요한 이슈."
+            },
+            {
+              "title": "2.2 은행 채널 이용 현황",
+              "summary": "2023년 모바일 뱅킹 이용률 증가, 영업점 이용률 감소.  모바일 뱅킹은 베이비부머 세대에서 이용률 증가가 두드러짐.  온라인/오프라인 채널 이용 고객층에 대한 고정관념을 탈피한 새로운 관계 강화 방안 필요."
+            },
+            {
+              "title": "2.3 디지털 상품 구성 사례",
+              "summary": "O2O 모델, 연계 상품 서비스 모델, 플랫폼 투 플랫폼 모델, 계정 관리 모델 등 다양한 디지털 상품 구성 사례 소개.  Open 플랫폼을 통한 외부 파트너와의 제휴 및 새로운 Digital Contents 개발."
+            },
+            {
+              "title": "2.4 디지털 기술 활용 서비스",
+              "summary": "AI 기반 챗봇 서비스 활용, Seamless한 App 이용 서비스 제공, 비대면/대면 융합 서비스 제공.  챗봇 상담 데이터를 활용한 Digital Contents 보강.  고객 편의성을 위한 단순한 프로세스 제공. 기존 대면 서비스를 All 비대면으로 전환."
+            }
+          ]
+        },
+        {
+          "title": "3. Digital Ecosystem",
+          "subSubSections": [
+            {
+              "title": "3.1 Digital Ecosystem의 정의",
+              "summary": "생산자와 소비자가 하나의 통합된 경험을 통해 다양한 요구를 충족할 수 있도록 상호 연결된 서비스 집합체."
+            },
+            {
+              "title": "3.2 Digital Ecosystem의 필요성",
+              "summary": "Digital 플랫폼 확장으로 인해 플랫폼 내부 및 플랫폼 간 연결 Ecosystem으로 확장.  플랫폼 내부 Ecosystem 관리 및 전략 필요. 자사 Open 플랫폼 구축 또는 타사 Open 플랫폼 이용 고려 필요."
+            },
+            {
+              "title": "3.3 Digital Ecosystem 전략",
+              "summary": "3rd Party Pull 전략 (외부 참여자 유인) 및 Provider Product Push 전략 (자사 콘텐츠 외부 플랫폼 공급) 등의 전략 제시.  Open API, Open 플랫폼을 통한 외부 자원 확보/활용을 통해 고객 가치 제고."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "reportObjective": "NH저축은행의 디지털 전환을 위한 정보화 전략 계획(ISP) 수립을 위한 환경 분석.  Customer eXperience, Digital Contents, Digital Ecosystem 세 가지 관점에서 국내외 금융기관의 디지털 동향 조사.",
+  "keywords": [
+    "고객경험 (CX)",
+    "디지털 콘텐츠",
+    "디지털 생태계",
+    "Seamless 서비스",
+    "Open API",
+    "Open 플랫폼",
+    "모바일 뱅킹",
+    "AI 챗봇",
+    "고객 여정 지도",
+    "비대면 서비스"
+  ]
+}
