@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AX Consulting HUB</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>[v-cloak]{display:none}</style>
+</head>
+<body class="bg-gray-100 flex flex-col h-screen">
+  <div id="app" v-cloak class="flex flex-col h-full">
+    <header class="bg-white shadow-md flex items-center justify-between p-2 flex-shrink-0">
+      <div class="flex items-center space-x-4">
+        <h1 class="text-xl font-bold text-gray-800">AX컨설팅HUB</h1>
+        <nav class="flex space-x-1">
+          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'ax-methodology' }" @click.prevent="setActiveMenu('ax-methodology')">AX방법론</a>
+          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Env_Analysis' }" @click.prevent="setActiveMenu('Env_Analysis')">환경분석</a>
+          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'TechEnv_Analysis' }" @click.prevent="setActiveMenu('TechEnv_Analysis')">기술환경분석</a>
+          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Biz_Analysis' }" @click.prevent="setActiveMenu('Biz_Analysis')">Biz 현황분석</a>
+          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'AXIT_Analysis' }" @click.prevent="setActiveMenu('AXIT_Analysis')">IT 현황분석</a>
+          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Visioning' }" @click.prevent="setActiveMenu('Visioning')">Visioning</a>
+          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Target_Model' }" @click.prevent="setActiveMenu('Target_Model')">목표모델</a>
+          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Impl_Tasks' }" @click.prevent="setActiveMenu('Impl_Tasks')">이행과제</a>
+          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Solutions' }" @click.prevent="setActiveMenu('Solutions')">솔루션업체</a>
+          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Roadmap' }" @click.prevent="setActiveMenu('Roadmap')">로드맵수립</a>
+        </nav>
+      </div>
+      <div class="flex items-center justify-between">
+        <label class="flex items-center cursor-pointer ml-4">
+          <input type="checkbox" v-model="showReferenceMaterials" class="form-checkbox h-5 w-5 text-indigo-600 rounded-md transition duration-200">
+          <span class="ml-2 text-gray-700 font-medium whitespace-nowrap">참고자료</span>
+        </label>
+        <label class="flex items-center cursor-pointer ml-4">
+          <input type="checkbox" v-model="useValidation" class="form-checkbox h-5 w-5 text-blue-600 rounded-md transition duration-200">
+          <span class="ml-2 text-gray-700 font-medium whitespace-nowrap">결과 검증</span>
+        </label>
+        <div class="relative inline-block text-left ml-4">
+          <select v-model="llmModelSelect" class="block w-full px-2 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+            <option value="Gemini">Gemini</option>
+            <option value="OpenAI">OpenAI</option>
+            <option value="Claude">Claude</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-container flex-grow flex">
+      <div class="chatbot-panel">
+        <h2 class="text-lg font-semibold text-gray-800 p-4 border-b border-gray-200 flex-shrink-0">
+            {{ leftPanelTitle }}
+        </h2>
+
+        <div class="chatbot-panel-content-wrapper">
+            <div v-if="activeMenu === 'ax-methodology'" class="panel-content">
+                <ul v-if="axMethodology.length > 0" class="ax-methodology-list">
+                    <task-item
+                      v-for="task in axMethodology"
+                      :key="task.id"
+                      :task="task"
+                      :select-task="selectTask"
+                      :is-expanded="isExpanded"
+                      :selected-task="selectedTask"
+                      :depth="0"
+                    />
+                </ul>
+                 <p v-else class="text-gray-600 p-4">AX 방법론 메뉴를 로드 중이거나 실패했습니다.</p>
+            </div>
+
+            <div v-else class="left-panel-content">
+                <div v-if="promptGroups.length > 0" class="prompt-group-container">
+                    <div v-for="(group, index) in promptGroups" :key="index" class="prompt-group">
+                        <button @click="togglePrompt(index)" class="prompt-group-button">
+                            <span>{{ group.title }}</span>
+                            <img :src="activePromptIndex === index ? '/static/img/down-arrow.jpg' : '/static/img/right-arrow.jpg'" class="toggle-icon" alt="toggle">
+                        </button>
+                        <div v-if="activePromptIndex === index" class="prompt-template-wrapper">
+                            <div class="prompt-info-bar">
+                                <span>아래 템플릿의 하이라이트 부분을 수정하여 프롬프트를 완성하세요.</span>
+                                <button @click="sendPromptFromPanel" class="send-button">전송</button>
+                            </div>
+                            <div class="prompt-template-content" v-html="highlightEditable(group.template)" contenteditable="true" ref="promptContentRef">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p v-else-if="isLoadingPrompts" class="p-4 text-gray-600">템플릿을 불러오는 중...</p>
+                <p v-else class="p-4 text-gray-600">선택된 메뉴에 대한 작업 단계가 없습니다.</p>
+            </div>
+        </div>
+
+        <div id="chatInputArea" class="chat-input-area">
+            <div class="file-upload-container">
+                <label for="file-upload" class="file-upload-label"> <img src="/static/img/upload.jpg" alt="Upload File" class="upload-icon"> <input type="file" id="file-upload" multiple @change="handleFileUpload" style="display: none;"> </label>
+                <span v-if="uploadedFiles.length > 0" class="file-count" @click="showFilePopup"> {{ uploadedFiles.length }} </span>
+            </div>
+            <textarea ref="chatInputRef" v-model="chatInput" @input="handleInput" @keydown.enter.prevent="sendMessage" placeholder="프롬프트를 입력하거나 템플릿을 선택하세요..."></textarea>
+            <button @click="sendMessage" class="submit-button"> <img src="/static/img/submit.jpg" alt="Submit" class="submit-icon"> </button>
+        </div>
+      </div>
+
+      <div class="workspace-panel rounded-lg shadow-inner">
+        </div>
+      <div class="source-panel rounded-lg shadow-inner">
+        </div>
+    </div>
+    
+    <div v-if="showPopup" class="file-popup-overlay" @click.self="hideFilePopup">
+        </div>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>

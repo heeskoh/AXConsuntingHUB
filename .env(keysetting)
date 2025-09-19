@@ -1,0 +1,13 @@
+# Copy this file to .env and fill in your keys
+OPENAI_API_KEY="real_Key_insert"
+GEMINI_API_KEY="real_Key_insert"
+ANTHROPIC_API_KEY="real_Key_insert"
+SERPAPI_API_KEY="real_Key_insert"
+TAVILY_API_KEY="real_Key_insert"
+
+# Default provider: openai | gemini | claude
+DEFAULT_PROVIDER=gemini 
+
+# Optional: host/port
+HOST=127.0.0.1
+PORT=5010
