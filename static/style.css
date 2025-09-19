@@ -1,0 +1,527 @@
+/* static/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Barun+Gothic:wght@400;700&display=swap');
+
+/* Basic reset and font settings */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Nanum Barun Gothic', sans-serif;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 2025-08-31 22:15 KST: main-container 높이 계산 수정 */
+.main-container {
+    display: flex;
+    flex-grow: 1; /* 남은 수직 공간을 모두 차지 */
+    height: 100%; /* 부모(body)의 남은 높이를 모두 사용 */
+    box-sizing: border-box;
+    padding-top: 48px; /* 2025-09-01 23:41 KST: 헤더 높이만큼 여백 추가 */
+}
+
+/* Panel common styles */
+.panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+}
+.panel > h2 {
+    flex-shrink: 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.panel-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    /* 2025-08-31 22:20 KST: 작업 공간 여백 추가 */
+    padding: 1rem;
+}
+#workspaceContent, #sourceInfo {
+    padding: 1rem;
+}
+#workspaceContent > p, #sourceInfo > p {
+    padding: 1rem;
+}
+
+/* Specific panel widths and backgrounds */
+.chatbot-panel {
+    width: 26%;
+    background-color: #f0f4f8;
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+}
+.workspace-panel {
+    width: 56%;
+    background-color: #ffffff;
+    border-right: 1px solid #e2e8f0; /* 2025-08-31 23:34 KST: 경계선 추가 */
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+}
+
+.source-panel {
+    width: 18%;
+    background-color: #f8fafc;
+    border-left: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+}
+
+/* Main Menu Active Style */
+/* 2025-09-17 21:23 KST: 활성 메뉴 하단 테두리 추가 및 스타일 개선 */
+.main-menu-item.active {
+    color: #4f46e5; /* 기존 active 색상 유지 */
+    font-weight: 700;
+    border-bottom: 3px solid #4f46e5; /* 강조를 위한 하단 테두리 추가 */
+    background-color: transparent; /* 기존 배경색 제거하여 깔끔하게 */
+    border-radius: 0; /* 테두리가 잘리지 않도록 radius 제거 */
+}
+
+/* 2025-08-31 21:44 KST: Header 높이 축소 및 타이틀 중앙 정렬 */
+header {
+    background-color: #fff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 0 1rem; /* 상하 여백을 줄임 */
+    height: 48px; /* 헤더 높이 48px로 고정 */
+    flex: 0 0 48px;
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+/* Chatbot specific styles */
+.chatbot-panel-content-wrapper {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.chat-messages {
+    flex-grow: 0;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* 프롬프트 입력창: 실제 엘리먼트에 적용 */
+/* 입력 영역: 반드시 가로 1행, 아래 정렬 */
+.chat-input-area {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+/* 프롬프트 입력창 자동 높이/수동 리사이즈 제거 */
+.chat-input-area textarea {
+  flex: 1;
+  resize: none;           /* ⬅ 브라우저 수동 리사이즈 핸들 제거 */
+  overflow-y: hidden;     /* 내용에 따라 자동 확장, 넘치면 JS에서 auto로 바꿈 */
+  min-height: 44px;
+  max-height: 320px;      /* 필요 시 200px → 320px 등으로 상향 */
+  line-height: 1.5;
+  box-sizing: border-box;
+  white-space: pre-wrap;  /* 줄바꿈/긴 템플릿 가독성 개선 */
+}
+
+
+/* 2025-08-31 23:31 KST: 입력창 높이 자동 조절 */
+#chatInput {
+    flex: 1;
+    resize: none;
+    overflow-y: hidden; /* 스크롤바 숨기기 */
+    min-height: 44px;
+    max-height: 200px;
+    box-sizing: border-box;
+    white-space: normal;
+}
+
+.chat-message { word-wrap: break-word; }
+.user-message {
+    background-color: #dbeafe;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    max-width: 85%;
+    align-self: flex-end;
+}
+.ai-message {
+    background-color: #e2e8f0;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    max-width: 85%;
+    align-self: flex-start;
+}
+
+/* Agent and Source Information styles */
+.agent-info {
+    margin: 1rem;
+    padding: 0.5rem;
+    background-color: #eff6ff;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+}
+.source-item {
+    margin: 0 1rem 0.5rem 1rem;
+    padding: 0.5rem;
+    background-color: #f0f9ff;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* General styles */
+.rounded-lg { border-radius: 0.75rem; }
+.shadow-inner { box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); }
+.shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+input:focus, textarea:focus, select:focus, button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.45);
+}
+
+/* Workspace content styling */
+.workspace-content-container {
+    line-height: 1.6;
+    color: #333;
+    padding: 1rem;
+}
+.workspace-content-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* --- AX Methodology Specific Styles --- */
+#axMethodologyContainer { padding: 1rem; }
+.ax-methodology-list {
+    padding: 0;
+    margin: 0;
+}
+.ax-methodology-sublist {
+  border-left: 1px dashed #e5e7eb;
+  margin-left: 12px;
+  padding-left: 4px;
+}
+.ax-methodology-item {
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+}
+.ax-methodology-item-button {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+    text-align: left;
+    color: #333;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 0.25rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.ax-methodology-item-button:hover {
+    background-color: #f0f4f8;
+}
+.ax-methodology-item-button.selected {
+    background-color: #bfdbfe;
+    font-weight: 600;
+    border-color: #3b82f6;
+}
+.ax-methodology-toggle-icon {
+    margin-right: 0.5rem;
+    width: 18px;
+    height: 18px;
+}
+.ax-methodology-sublist-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+.ax-methodology-sublist-container.expanded {
+    max-height: 1000px;
+}
+
+/* --- Prompt Template Button Styles --- */
+#promptButtonContainer {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+.prompt-button-container {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-content: flex-start;
+}
+.prompt-template-button {
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    width: 100%;
+    text-align: left;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.prompt-template-button:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+/* --- Task Selection Link Styles --- */
+#taskSelectionLinkContainer {
+    padding: 0.75rem 1rem;
+    background-color: #eef2ff; /* Light indigo background */
+    border-bottom: 1px solid #e0e7ff; /* Slightly darker border */
+}
+
+.task-selection-link {
+    color: #4338ca; /* Indigo text color */
+    font-weight: 600;
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.task-selection-link:hover {
+    background-color: #e0e7ff; /* Lighter indigo on hover */
+    color: #3730a3;
+    text-decoration: underline;
+}
+
+/* Prompt Card Styles (Workspace) */
+.prompt-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.prompt-card {
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+.prompt-card h4 {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #2563eb;
+}
+.prompt-card p {
+    font-size: 0.9rem;
+    color: #4a5568;
+    margin-bottom: 1rem;
+}
+.prompt-copy-button {
+    background-color: #4299e1;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.prompt-copy-button:hover {
+    background-color: #3182ce;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 2025-08-31 23:31 KST: 전송 버튼 스타일 수정 */
+.submit-button {
+    background-color: transparent; /* 배경색 제거 */
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5rem;
+}
+
+.submit-button:hover {
+    background-color: transparent;
+}
+
+.submit-button:focus {
+    box-shadow: none;
+}
+
+.submit-icon {
+    width: 32px; /* 아이콘 크기 조절 */
+    height: 32px;
+}
+
+/* 이 블록만 유지 (권장 max-height: 320px) */
+.chat-input-area textarea {
+  flex: 1;
+  resize: none;
+  overflow-y: hidden;
+  min-height: 44px;
+  max-height: 320px;  /* 필요한 경우 값만 조정 */
+  line-height: 1.5;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  align-items: flex-end; /*모든 아이템을 아래로 정렬 */
+}
+
+
+/* 2025-08-31 23:31 KST: 파일 업로드 컨테이너 스타일 */
+.file-upload-container {
+    position: relative;
+    display: flex;
+    align-items: flex-end; /* 파일 업로드 컨테이너를 아래로 정렬 */
+    margin-right: 0.5rem;
+    margin-bottom: 2px; /* 전송 버튼과 높이를 맞추기 위해 조정 */
+}
+
+.file-upload-label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    background-color: #e2e8f0;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+    width: 48px; /* 아이콘 크기에 맞춰 컨테이너 크기 조절 */
+    height: 40px;
+}
+
+.file-upload-label:hover {
+    background-color: #cbd5e1;
+}
+
+.upload-icon {
+    width: 44px;
+    height: 32px;
+}
+
+.file-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ef4444;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 2025-08-31 23:31 KST: 파일 팝업 스타일 */
+.file-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.file-popup-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 90%;
+}
+
+.file-popup-content h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.file-popup-content ul {
+    list-style: none;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.file-popup-content li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.file-popup-content li:last-child {
+    border-bottom: none;
+}
+
+.file-popup-content button {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.file-popup-content button:hover {
+    background-color: #dc2626;
+}
+
+/* 2025-09-01 00:34 KST: 작업 공간 패널의 내부 여백 설정 */
+.workspace-panel .panel-content {
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
