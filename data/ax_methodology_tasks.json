@@ -1,0 +1,286 @@
+[
+    {
+        "id": "100-Analysis",
+        "name": "환경 및 현황 분석",
+        "description": "기업의 현재 AX 환경과 비즈니스 및 IT 현황을 종합적으로 분석하여 AX 전환의 방향성을 도출하는 단계입니다.",
+        "promptTemplates": [], 
+        "subTasks": [
+            {
+                "id": "110-Env",
+                "name": "환경분석",
+                "description": "국내외 AI 정책, 선진 사례, 법제도 등을 분석하여 AX 전환에 필요한 외부 환경 요인을 이해합니다.",
+                "promptTemplates": [],
+                "subTasks": [
+                    {"id": "111-DomPol", 
+                    "name": "국내 AI 주요 정책의 변화와 현재", 
+                    "description": "국내 AI 관련 주요 정책의 역사적 변화와 현재 동향을 분석합니다.", 
+                    "promptTemplates": [
+                        {"title": "국내 AI 정책 동향", "template": "최근 5년간 국내 AI 산업 육성을 위한 주요 정책 변화와 현재 추진 중인 정책들에 대해 요약해 주세요. 각 정책의 핵심 목표와 주요 사업을 포함하여 설명해주세요."}
+                    ]},
+                    {"id": "112-IntPol", 
+                    "name": "국외 AI 주요 정책의 변화와 현재", 
+                    "description": "주요 선진국의 AI 정책 변화와 현재 동향을 분석합니다.", 
+                    "promptTemplates": [
+                        {"title": "해외 AI 정책 비교", "template": "미국, 유럽연합, 중국, 일본 등 주요 국가들의 AI 정책 중 두 곳을 선정하여 AI 산업 지원 전략, 규제 프레임워크, 투자 동향을 비교 분석하고 시사점을 도출해 주세요."}
+                    ]},
+                    {"id": "113-Usecases", 
+                    "name": "[도메인별] AX선진사례", 
+                    "description": "특정 도메인(예: 금융, 제조, 유통)에서의 AX 선진 사례를 조사하고 주요 성공 요인을 분석합니다.", 
+                    "promptTemplates": [
+                        {"title": "금융 분야 AX 선진 사례", "template": "금융 산업에서 AI/DX를 성공적으로 도입한 해외 선진 기업의 사례 3가지를 제시하고, 이들의 핵심 성공 요인과 국내 적용 가능성을 분석해 주세요."}
+                    ]},
+                    {"id": "114-Legal", 
+                    "name": "AX 관련 법제도", 
+                    "description": "AX 전환과 관련된 국내외 법제도를 분석하고 기업에 미치는 영향을 평가합니다.", 
+                    "promptTemplates": [
+                        {"title": "국내 데이터 3법 요약", "template": "국내 데이터 3법(개인정보보호법, 정보통신망법, 신용정보법)의 주요 내용을 요약하고, 기업의 AI 서비스 개발 및 운영에 미치는 영향에 대해 설명해 주세요."}
+                    ]},
+                    {"id": "115-Ethical", 
+                    "name": "AX 관련 윤리적/법적 위험 분석", 
+                    "description": "AI 도입 시 발생할 수 있는 윤리적, 법적 위험 요소를 식별하고 대응 방안을 모색합니다.", 
+                    "promptTemplates": [
+                        {"title": "AI 윤리 가이드라인", "template": "기업이 AI 시스템 개발 및 운영 시 고려해야 할 주요 윤리적 원칙 5가지와 이를 준수하기 위한 구체적인 가이드라인을 제시해 주세요."}
+                    ]}
+                ]
+            },
+            {
+                "id": "120-TechEnv",
+                "name": "기술환경분석",
+                "description": "국내외 AI 기술 동향 및 솔루션, 기술 발전 로드맵 등을 분석하여 AX 전환에 필요한 기술 환경 요인을 이해합니다.",
+                "promptTemplates": [],
+                "subTasks": [
+                    {"id": "121-Tech", 
+                    "name": "AI 기술동향 조사 [기관별]", 
+                    "description": "주요 연구기관(예: 가트너, IDC)이나 기업(예: 구글, 엔비디아)에서 발표하는 AI 기술 동향을 조사합니다.", 
+                    "promptTemplates": [
+                        {"title": "최신 AI 기술 동향", "template": "2024년 발표된 주요 AI 기술 동향 보고서(가트너 하이프 사이클 등)를 기반으로, 주목해야 할 AI 기술 5가지와 그 발전 방향에 대해 설명해 주세요."}
+                    ]},
+                    {"id": "122-techRoadmap", 
+                    "name": "AI기술의 발전 및 로드맵", 
+                    "description": "AI 기술의 발전 과정을 이해하고 미래 로드맵을 수립합니다.", 
+                    "promptTemplates": [
+                        {"title": "AI 기술 발전 로드맵", "template": "생성형 AI 기술의 발전 과정을 요약하고, 향후 5년간 예상되는 주요 발전 단계와 로드맵을 제시해 주세요."}
+                    ]}
+                ]
+            },
+            {
+                "id": "130-BizReq",
+                "name": "비즈니스 요건 분석",
+                "description": "비즈니스 현황 분석과 임직원 인터뷰 및 성숙도 수준진단을 통하여 비즈니스 관점의 요건을 분석하고 AI 도입의 기회와 제약 사항을 식별합니다.",
+                "promptTemplates": [],
+                "subTasks": [
+                    {"id": "131-BizAnal", 
+                    "name": "비즈니스 현황분석(경영전략 및 IT전략분석)", 
+                    "description": "현재 경영 전략 및 IT 전략을 분석하여 AI 도입의 비즈니스적 가치를 평가합니다.", 
+                    "promptTemplates": [
+                        {"title": "현행 비즈니스 전략 분석", "template": "현재 우리 기업의 경영 전략과 IT 전략을 분석하여 AI 도입이 어떤 시너지를 창출할 수 있을지 설명해 주세요."}
+                    ]},
+                    {"id": "132-BizReq", 
+                    "name": "비즈니스 AI 요건 정의(인터뷰, 비즈니스 니즈 분석)", 
+                    "description": "현업 인터뷰 및 비즈니스 니즈 분석을 통해 AI 도입의 구체적인 요건을 정의합니다.", 
+                    "promptTemplates": [
+                        {"title": "AI 요건 정의 인터뷰 질문", "template": "비즈니스 리더와 인터뷰를 통해 AI 도입 요건을 정의하기 위한 핵심 질문 5가지와 그 질문을 통해 얻고자 하는 정보가 무엇인지 설명해 주세요."}
+                    ]},
+                    {"id": "133-AXmaturity", "name": "AX성숙도 진단", "description": "기업의 AX 성숙도를 진단하고, 현 수준에 맞는 AI 도입 전략을 수립하기 위한 기초 자료를 확보합니다.", "promptTemplates": [
+                        {"title": "AX 성숙도 진단 질문지", "template": "기업의 AX(AI 전환) 성숙도를 진단하기 위한 질문 5가지를 제시하고, 각 질문에 대한 답변이 의미하는 성숙도 수준을 간략히 설명해 주세요."}
+                    ]}
+                ]
+            },
+             {
+                "id": "140-AI_ITReq",
+                "name": "AI관련 IT 요건분석",
+                "description": "비즈니스 관점의 AI 서비스 요건에 따른 시스템 변화 요건과 데이터 현황을 분석하여 AI 관점의 현황을 분석하고 AI 시스템 도입의 기회와 제약 사항을 식별합니다.",
+                "promptTemplates": [],
+                "subTasks": [
+                    {"id": "141-AIdata", 
+                    "name": "AI 요건 필요 데이터 현황분석", 
+                    "description": "AI 서비스 구현에 필요한 데이터의 현황(보유 여부, 품질, 접근성)을 분석합니다.", 
+                    "promptTemplates": [
+                        {"title": "데이터 현황 분석 가이드", "template": "AI 서비스 개발에 필요한 데이터의 현황을 분석하기 위한 체크리스트 5가지 항목을 제시하고, 각 항목별 주요 고려사항을 설명해 주세요."}
+                    ]},
+                    {"id": "142-AIsystem", "name": "AI 연관시스템 현환분석", "description": "AI와 연동될 기존 시스템들의 현황을 분석하여 연동 방안 및 기술적 제약을 파악합니다.", "promptTemplates": [
+                        {"title": "AI 연관 시스템 분석", "template": "AI 솔루션 도입 시 기존 레거시 시스템과의 연동 방안을 모색하고, 발생할 수 있는 기술적 난관과 해결책을 제시해 주세요."}
+                    ]},
+                    {"id": "143-DataAnal", "name": "데이터 분석시스템 현황 분석", "description": "현재 데이터 분석 시스템의 역량을 평가하고 AI 기반 분석 시스템으로의 전환 가능성을 모색합니다.", "promptTemplates": [
+                        {"title": "데이터 분석 인프라 평가", "template": "현재 기업의 데이터 분석 인프라를 평가하기 위한 주요 지표 3가지와 각 지표별 개선 방안을 설명해 주세요."}
+                    ]}
+                ]
+            },
+            {"id": "150-Insights", "name": "시사점 및 개선기회 도출", "description": "환경 및 현황 분석 결과를 종합하여 핵심 시사점과 AI 기반의 개선 기회를 도출합니다.", "promptTemplates": [
+                {"title": "종합 시사점 도출", "template": "환경 및 현황 분석 결과를 바탕으로, 우리 기업이 AX 전환을 통해 얻을 수 있는 핵심 시사점과 3가지 개선 기회를 도출해 주세요."}
+            ]}
+        ]
+    },
+    {
+        "id": "200-Target",
+        "name": "AI 혁신 목표모델 수립",
+        "description": "AI를 활용한 혁신적인 비전과 목표를 설정하고, 이를 달성하기 위한 구체적인 목표 모델을 설계하는 단계입니다.",
+        "promptTemplates": [],
+        "subTasks": [
+            {
+                "id": "210-vision",
+                "name": "비전 및 전략수립",
+                "description": "AX 서비스 구축의 비전과 목표를 정의하고, 이를 위한 구체적인 전략을 수립합니다.",
+                "promptTemplates": [],
+                "subTasks": [
+                    {"id": "211-visioning", "name": "AX 서비스 구축 비전 및 목표 수립", "description": "AI 서비스를 통한 미래 비전과 달성하고자 하는 구체적인 목표를 설정합니다.", "promptTemplates": [
+                        {"title": "AX 비전 수립 가이드", "template": "우리 기업의 AX 서비스 비전을 수립하기 위한 핵심 요소 3가지와 각각에 대한 예시를 제시해 주세요."}
+                    ]},
+                    {"id": "212-strategy", "name": "AX 서비스 구축전략 수립", "description": "비전과 목표 달성을 위한 AI 서비스 구축 전략을 상세화합니다.", "promptTemplates": [
+                        {"title": "AX 구축 전략 수립", "template": "AI 서비스 구축을 위한 전략 수립 시 고려해야 할 핵심 단계 4가지를 설명하고, 각 단계별 주요 활동을 제시해 주세요."}
+                    ]},
+                    {"id": "213-Management", "name": "AX 서비스 관리전략 수립", "description": "구축된 AI 서비스의 지속적인 운영 및 관리를 위한 전략을 수립합니다.", "promptTemplates": [
+                        {"title": "AI 서비스 운영 관리 전략", "template": "AI 서비스 운영 및 관리를 위한 효과적인 전략 3가지와 각 전략의 중요성을 설명해 주세요."}
+                    ]}
+                ]
+            },
+            {
+                "id": "220-TargetModel",
+                "name": "목표모델 설계",
+                "description": "핵심 추진 과제를 정의하고, 업무 혁신 방안 및 목표 아키텍처를 설계합니다.",
+                "promptTemplates": [],
+                "subTasks": [
+                    {"id": "221-Initiative", "name": "핵심 추진과제 정의", "description": "비전 달성을 위한 핵심적인 AI 추진 과제들을 식별하고 정의합니다.", "promptTemplates": [
+                        {"title": "핵심 추진과제 정의", "template": "AX 비전을 달성하기 위한 핵심 추진과제 5가지를 정의하고, 각 과제의 예상 효과를 설명해 주세요."}
+                    ]},
+                    {"id": "222-bizInnovation", "name": "과제별 업무혁신방안 수립", "description": "각 추진 과제별로 업무 프로세스 혁신 방안을 구체화합니다.", "promptTemplates": [
+                        {"title": "업무 혁신 방안 수립", "template": "특정 업무(예: 고객 서비스)에 AI를 도입했을 때 예상되는 업무 혁신 방안 3가지와 그 효과를 설명해 주세요."}
+                    ]},
+                    {"id": "223-DataCollection", "name": "과제별 필요 데이터 수집/관리방안", "description": "각 과제 수행에 필요한 데이터의 수집, 저장, 관리 방안을 수립합니다.", "promptTemplates": [
+                        {"title": "AI 데이터 관리 전략", "template": "AI 학습 및 운영에 필요한 데이터를 효과적으로 수집하고 관리하기 위한 전략 4가지를 제시해 주세요."}
+                    ]},
+                    {"id": "224-Adoption", "name": "과제별 인공지능 도입 타당성 검토", "description": "각 과제에 AI 도입의 기술적, 경제적 타당성을 검토합니다.", "promptTemplates": [
+                        {"title": "AI 도입 타당성 검토 항목", "template": "AI 도입 타당성을 검토하기 위한 주요 항목 3가지(기술적, 경제적, 전략적)를 설명하고, 각 항목별 평가 기준을 제시해 주세요."}
+                    ]},
+                    {"id": "225-Consideration", "name": "과제별 고려사항 검토", "description": "각 과제 수행 시 발생할 수 있는 잠재적 위험 및 고려사항을 검토합니다.", "promptTemplates": [
+                        {"title": "AI 프로젝트 위험 요소", "template": "AI 프로젝트 수행 시 발생할 수 있는 주요 위험 요소 4가지와 각 위험 요소에 대한 대응 방안을 설명해 주세요."}
+                    ]},
+                    {"id": "226-archi", "name": "AX 서비스를 위한 목표 아키텍처 정의", "description": "AX 서비스를 지원할 목표 아키텍처를 정의하고, 기술 스택 및 구성 요소를 설계합니다.", "promptTemplates": [
+                        {"title": "AI 서비스 아키텍처 설계", "template": "AI 서비스를 위한 목표 아키텍처 설계 시 고려해야 할 핵심 요소 3가지(데이터, 모델, 배포)를 설명해 주세요."}
+                    ]}
+                ]
+            }
+        ]
+    },
+    {
+        "id": "300-Roadmap",
+        "name": "AX 로드맵 수립",
+        "description": "AI 혁신 목표를 달성하기 위한 이행 과제를 정의하고, 구체적인 로드맵 및 실행 계획을 수립하는 단계입니다.",
+        "promptTemplates": [],
+        "subTasks": [
+            {
+                "id": "310-Implementation",
+                "name": "이행과제정의",
+                "description": "AI 로드맵 실행을 위한 구체적인 과제들을 정의하고 우선순위를 분석합니다.",
+                "promptTemplates": [],
+                "subTasks": [
+                    {"id": "311-Prioritization", "name": "이행과제정의 및 우선순위 분석", "description": "로드맵 실행을 위한 과제를 정의하고 중요도와 시급성에 따라 우선순위를 설정합니다.", "promptTemplates": [
+                        {"title": "이행 과제 우선순위 설정", "template": "AX 로드맵의 이행 과제 우선순위를 설정하기 위한 기준 3가지(비즈니스 가치, 기술 난이도, 의존성)를 설명해 주세요."}
+                    ]},
+                    {"id": "312-benefit", "name": "기대효과 분석", "description": "각 이행 과제 수행을 통해 얻을 수 있는 비즈니스 및 기술적 기대효과를 정량적/정성적으로 분석합니다.", "promptTemplates": [
+                        {"title": "기대 효과 분석", "template": "AX 이행 과제의 기대 효과를 분석하기 위한 방법론 2가지(정량적, 정성적)를 설명하고 각 방법론의 특징을 제시해 주세요."}
+                    ]}
+                ]
+            },
+            {
+                "id": "320-roadmap-dev",
+                "name": "로드맵 수립",
+                "description": "정의된 이행 과제들을 기반으로 AI 도입 로드맵을 수립하고 상세화합니다.",
+                "promptTemplates": [],
+                "subTasks": [
+                    {"id": "321-Impl-strategy", "name": "이행전략 및 로드맵 정의", "description": "AI 도입을 위한 전체적인 이행 전략과 단계별 로드맵을 정의합니다.", "promptTemplates": [
+                        {"title": "AI 로드맵 정의", "template": "AI 도입 로드맵을 정의할 때 포함되어야 할 핵심 구성 요소 4가지와 각 구성 요소의 역할을 설명해 주세요."}
+                    ]},
+                    {"id": "322-Task", "name": "이행과제 상세화", "description": "각 로드맵 단계별 이행 과제를 상세화하고, 마일스톤을 설정합니다.", "promptTemplates": [
+                        {"title": "이행 과제 상세화", "template": "AI 로드맵의 이행 과제를 상세화하기 위한 주요 활동 3가지(요구사항 정의, 기술 스택 선정, 담당 조직 할당)를 설명해 주세요."}
+                    ]},
+                    {"id": "323-budgeting", "name": "소요예산 산정", "description": "AI 로드맵 실행에 필요한 예상 예산을 산정하고 자원 계획을 수립합니다.", "promptTemplates": [
+                        {"title": "AI 프로젝트 예산 산정", "template": "AI 프로젝트의 소요 예산을 산정하기 위한 주요 고려사항 4가지(인력, 인프라, 데이터, 라이선스)를 설명해 주세요."}
+                    ]}
+                ]
+            },
+            {
+                "id": "330-execution",
+                "name": "이행계획 실행지원",
+                "description": "수립된 로드맵의 실행을 지원하고, 후속 사업 기획을 돕습니다.",
+                "promptTemplates": [],
+                "subTasks": [
+                    {"id": "331-bizplan", "name": "사업계획서 및 제안요청서 작성 지원", "description": "AI 프로젝트의 사업 계획서 및 제안요청서(RFP) 작성을 지원합니다.", "promptTemplates": [
+                        {"title": "사업 계획서 작성 가이드", "template": "AI 프로젝트 사업 계획서에 포함되어야 할 핵심 섹션 5가지와 각 섹션별 작성 팁을 제시해 주세요."}
+                    ]},
+                    {"id": "332-projectplan", "name": "후속 사업 기획지원", "description": "AI 로드맵의 후속 단계 또는 연관된 신규 사업 기획을 지원합니다.", "promptTemplates": [
+                        {"title": "후속 AI 사업 기획", "template": "AI 로드맵의 성공적인 실행 이후, 확장 가능한 후속 AI 사업을 기획하기 위한 고려사항 3가지(기술 확장성, 시장 기회, 파트너십)를 설명해 주세요."}
+                    ]}
+                ]
+            }
+        ]
+    },
+    {
+        "id": "400-projectm",
+        "name": "프로젝트 관리",
+        "description": "AX 프로젝트의 성공적인 수행을 위한 전반적인 관리 활동을 포함합니다.",
+        "promptTemplates": [],
+        "subTasks": [
+            {
+                "id": "410-preparation",
+                "name": "사전 작업",
+                "description": "프로젝트 착수 전 필요한 계획 및 문서 준비 작업을 수행합니다.",
+                "promptTemplates": [],
+                "subTasks": [
+                    {"id": "411-executionplan", "name": "사업수행계획서", "description": "프로젝트 사업 수행 계획서를 작성하고 승인받습니다.", "promptTemplates": [
+                        {"title": "사업수행계획서 작성", "template": "AI 프로젝트 사업수행계획서에 포함되어야 할 필수 항목 5가지와 각 항목별 핵심 내용을 설명해 주세요."}
+                    ]},
+                    {"id": "412-resourceallocation", "name": "인력투입계획", "description": "프로젝트에 필요한 인력 자원 계획을 수립하고 배정합니다.", "promptTemplates": [
+                        {"title": "AI 프로젝트 인력 계획", "template": "AI 프로젝트의 성공적인 인력투입계획을 수립하기 위한 고려사항 3가지(전문성, 팀 구성, 역할 분배)를 설명해 주세요."}
+                    ]},
+                    {"id": "413-WBS", "name": "WBS", "description": "프로젝트 작업 분해 구조(WBS)를 정의하고 각 작업별 상세 계획을 수립합니다.", "promptTemplates": [
+                        {"title": "WBS 작성 가이드", "template": "AI 프로젝트 WBS(작업 분해 구조) 작성 시 포함되어야 할 핵심 요소 4가지와 각 요소별 유의사항을 제시해 주세요."}
+                    ]}
+                ]
+            },
+            {
+                "id": "420-reporting",
+                "name": "주기별 보고",
+                "description": "프로젝트 진행 상황을 주기적으로 보고하고 이해관계자들과 소통합니다.",
+                "promptTemplates": [
+                    {"title": "주간 보고 양식", "template": "AI 프로젝트 주간 보고서에 포함되어야 할 핵심 내용 3가지(진행 상황, 이슈, 계획)를 설명해 주세요."}
+                ],
+                "subTasks": []
+            },
+            {
+                "id": "430-stage-reporting",
+                "name": "단계별 보고",
+                "description": "프로젝트의 주요 단계별로 보고를 수행하여 의사결정을 지원합니다.",
+                "promptTemplates": [],
+                "subTasks": [
+                    {"id": "431-kickoff", "name": "착수보고", "description": "프로젝트 착수 시점에 초기 계획과 목표를 보고합니다.", "promptTemplates": [
+                        {"title": "착수 보고서 항목", "template": "AI 프로젝트 착수 보고서에 포함되어야 할 핵심 항목 5가지(목표, 범위, 일정, 인력, 예산)를 설명해 주세요."}
+                    ]},
+                    {"id": "432-interim", "name": "중간보고", "description": "프로젝트 중간 시점에 진행 상황, 성과, 이슈를 보고합니다.", "promptTemplates": [
+                        {"title": "중간 보고서 내용", "template": "AI 프로젝트 중간 보고서에 포함되어야 할 주요 내용 4가지(진행률, 주요 성과, 위험 및 이슈, 향후 계획)를 설명해 주세요."}
+                    ]},
+                    {"id": "433-final", "name": "종료보고", "description": "프로젝트 종료 시점에 최종 결과, 성과, 교훈을 보고합니다.", "promptTemplates": [
+                        {"title": "종료 보고서 핵심", "template": "AI 프로젝트 종료 보고서에 포함되어야 할 핵심 내용 3가지(최종 결과, 성공/실패 요인 분석, 교훈 및 제언)를 설명해 주세요."}
+                    ]}
+                ]
+            },
+            {
+                "id": "440-workshop",
+                "name": "워크숍",
+                "description": "프로젝트의 특정 목표 달성을 위한 워크숍을 기획하고 실행합니다.",
+                "promptTemplates": [],
+                "subTasks": [
+                    {"id": "441-requirment", "name": "요건 수집 워크숍(D-Workshop)", "description": "데이터 및 AI 요건을 수집하기 위한 워크숍을 진행합니다.", "promptTemplates": [
+                        {"title": "D-Workshop 기획", "template": "데이터 및 AI 요건 수집을 위한 D-Workshop 기획 시 고려해야 할 핵심 단계 3가지(목표 설정, 참석자 선정, 아젠다 구성)를 설명해 주세요."}
+                    ]},
+                    {"id": "442-direction", "name": "방향성 수립 워크숍", "description": "프로젝트의 전략적 방향성을 수립하기 위한 워크숍을 진행합니다.", "promptTemplates": [
+                        {"title": "방향성 수립 워크숍 아젠다", "template": "AI 프로젝트의 방향성 수립 워크숍 아젠다에 포함되어야 할 주요 세션 4가지와 각 세션별 목표를 제시해 주세요."}
+                    ]},
+                    {"id": "443-roadmapws", "name": "로드맵 수립 워크숍", "description": "AX 로드맵을 구체적으로 수립하기 위한 워크숍을 진행합니다.", "promptTemplates": [
+                        {"title": "로드맵 수립 워크숍 진행", "template": "AX 로드맵 수립 워크숍을 효과적으로 진행하기 위한 방법론 3가지(참여자 중심 활동, 시각화 도구 활용, 단계별 합의 도출)를 설명해 주세요."}
+                    ]}
+                ]
+            }
+        ]
+    }
+]

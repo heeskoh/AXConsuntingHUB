@@ -1,0 +1,6 @@
+[
+  {
+    "title": "WBS(작업 분해 구조) 작성",
+    "template": "AI 모델 개발 프로젝트의 WBS(Work Breakdown Structure)를 3레벨 깊이로 작성해주세요. (예: 1. 프로젝트 관리, 2. 데이터 준비, 3. 모델 개발, ...)"
+  }
+]

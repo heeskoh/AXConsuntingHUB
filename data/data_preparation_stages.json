@@ -1,0 +1,16 @@
+[
+    { "id": "110", "name": "환경분석", "folder": "110-Env_files" },
+    { "id": "120", "name": "기술환경분석", "folder": "120-TechEnv_files" },
+    { "id": "130", "name": "Biz요건분석", "folder": "130-BizReq_files" },
+    { "id": "140", "name": "AI IT요건분석", "folder": "140-AI_ITReq_files" },
+    { "id": "210", "name": "Visining", "folder": "210-Vision_files" },
+    { "id": "220", "name": "목표모델", "folder": "220-TargetModel_files" },
+    { "id": "310", "name": "이행과제", "folder": "310-Implementation_files" },
+    { "id": "320", "name": "로드맵수립", "folder": "320-roadmap_files" },
+    { "id": "323", "name": "솔루션업체", "folder": "323-vendor_files" },
+    { "id": "330", "name": "이행계획", "folder": "330-execution_files" },
+    { "id": "410", "name": "사전준비", "folder": "410-preparation_files" },
+    { "id": "430", "name": "단계별보고", "folder": "430-stage-reporting_files" },
+    { "id": "440", "name": "워크숍", "folder": "440-workshop_files" },
+    { "id": "900", "name": "제안작업", "folder": "900-proposal_files" }
+]
