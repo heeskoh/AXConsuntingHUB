@@ -9,7 +9,7 @@ import fitz
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
-# from werkzeug.utils import secure_filename # 파일 이름 유지를 위해 사용 안 함
+from werkzeug.utils import secure_filename # 파일 이름 유지를 위해 사용 안 함
 
 # 내부 모듈 임포트
 from utils.exceptions import APIException
@@ -192,6 +192,7 @@ def get_task_files(task_id):
 # ===================================================================
 # 2025-09-18 23:10 KST: API 반환 키 값을 original_file_name으로 통일
 # ===================================================================
+
 @app.route('/api/reference-materials/<string:folder_name>')
 def get_reference_materials(folder_name):
     """지정된 폴더 내의 Abstract_*.json 파일 목록과 내용을 반환합니다."""
@@ -220,12 +221,53 @@ def get_reference_materials(folder_name):
     except Exception as e:
         logger.error(f"참고자료 목록을 가져오는 중 오류 발생 {folder_name}: {e}")
         return jsonify({"error": "참고자료 목록을 가져오는 중 오류 발생"}), 500
-    
+
 
 # --- 데이터 파일 직접 서빙 라우트 ---
 @app.route('/data/<path:subpath>')
 def serve_data_files(subpath):
     return send_from_directory(DATA_FOLDER, subpath)
+#--------------------------------------------------------------------
+
+# ===================================================================
+# 2025-09-19 21:05 KST: get_prompt_template
+# ===================================================================
+
+@app.route('/api/get_prompt_template', methods=['POST'])
+def get_prompt_template():
+    """
+    요청된 경로의 프롬프트 템플릿 JSON 파일을 읽어 반환합니다.
+    보안을 위해 'data/'로 시작하는 경로만 허용합니다.
+    """
+    data = request.json
+    file_path = data.get('path')
+
+    if not file_path or not file_path.startswith('data/'):
+        return jsonify({"error": "Invalid or unauthorized file path"}), 400
+
+    # os.path.abspath를 사용하여 정규화된 경로를 얻고, 프로젝트 루트 내에 있는지 확인합니다.
+    base_dir = os.path.abspath(os.path.dirname(__file__))
+    safe_path = os.path.abspath(os.path.join(base_dir, file_path))
+
+    if not safe_path.startswith(base_dir):
+        return jsonify({"error": "Directory traversal attempt detected"}), 400
+
+    try:
+        with open(safe_path, 'r', encoding='utf-8') as f:
+            return jsonify(json.load(f))
+    except FileNotFoundError:
+        return jsonify({"error": "Prompt template not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+app.route('/api/execute', methods=['POST'])
+def execute_task():
+    data = request.json
+    task_id = data.get('task_id')
+    user_prompt = data.get('prompt')
+
+# --------------------------------------------------------------------
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
