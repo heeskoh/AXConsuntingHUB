@@ -1,5 +1,9 @@
 /* static/style.css */
 /* 2025-01-16 19:30 KST: 3단 레이아웃에 최적화된 스타일 전면 개편 */
+/* 2025-01-17 10:00 KST: UI/UX 개선 - 버튼 높이 통일, 전송 버튼 이미지화, 자유 프롬프트 지원 */
+/* 2025-01-17 12:00 KST: AX방법론 메뉴에서 프롬프트 입력창 제거 */
+/* 2025-01-17 12:30 KST: 안내 메시지 영역 높이 줄임 */
+/* 2025-01-17 14:00 KST: 참고자료 표시 개선을 위한 스타일 대폭 추가 */
 
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Barun+Gothic:wght@400;700&display=swap');
 
@@ -98,6 +102,7 @@ header {
 }
 
 /* 2025-01-16 20:30 KST: AX 방법론 패널 */
+/* 2025-01-17 12:00 KST: AX방법론은 단순 계층 메뉴만 표시 */
 .chatbot-panel-content-wrapper {
   flex-grow: 1;
   overflow-y: auto;
@@ -136,6 +141,7 @@ header {
   transition: all 0.2s;
   margin-bottom: 0.25rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  min-height: 44px; /* 2025-01-17 10:00 KST: 최소 높이 설정 */
 }
 
 .ax-methodology-item-button:hover {
@@ -188,12 +194,13 @@ header {
   gap: 0.5rem;
 }
 
+/* 2025-01-17 10:00 KST: 버튼 높이 통일 - AX방법론 스타일에 맞춤 */
 .prompt-group-btn {
   width: 100%;
   background-color: #fff;
   border: 1px solid #d1d5db;
   border-radius: 0.5rem;
-  padding: 0.875rem 1rem;
+  padding: 0.5rem 0.75rem; /* AX방법론 버튼과 동일한 패딩 */
   font-weight: 500;
   font-size: 0.95rem;
   color: #374151;
@@ -201,6 +208,9 @@ header {
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  min-height: 44px; /* 최소 높이 설정 */
+  display: flex;
+  align-items: center;
 }
 
 .prompt-group-btn:hover {
@@ -216,10 +226,20 @@ header {
   font-weight: 600;
 }
 
+.no-prompts-message {
+  padding: 1rem;
+  text-align: center;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  margin: 0.5rem;
+}
+
 /* 2025-01-16 21:30 KST: 중간: 템플릿 정보 + 전송 버튼 바 */
+/* 2025-01-17 10:30 KST: 전송 버튼 이미지 스타일로 변경 */
+/* 2025-01-17 12:30 KST: 안내 메시지 영역 높이 줄임 */
 .template-info-bar {
   flex-shrink: 0;
-  padding: 0.75rem;
+  padding: 0.5rem 0.75rem; /* 0.75rem에서 0.5rem으로 줄임 */
   background-color: #fef3c7;
   border-bottom: 1px solid #fbbf24;
 }
@@ -231,26 +251,36 @@ header {
 }
 
 .template-instruction {
-  font-size: 0.85rem;
+  font-size: 0.8rem; /* 0.85rem에서 0.8rem으로 조금 더 줄임 */
   color: #92400e;
   font-weight: 500;
 }
 
+/* 2025-01-17 10:30 KST: 전송 버튼을 이미지로 변경 */
+/* 2025-01-17 12:30 KST: 전송 버튼 크기도 조금 줄임 */
 .send-btn-inline {
-  background-color: #10b981;
-  color: white;
-  padding: 0.5rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  background: none;
   border: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.send-btn-inline:hover {
-  background-color: #059669;
+.send-btn-inline img {
+  width: 35px; /* 40px에서 35px로 줄임 */
+  height: 35px; /* 40px에서 35px로 줄임 */
+  transition: transform 0.2s;
+}
+
+.send-btn-inline:hover img {
+  transform: scale(1.1);
+}
+
+.send-btn-inline:active img {
+  transform: scale(0.95);
 }
 
 /* 2025-01-16 22:00 KST: 하단: 프롬프트 입력 영역 */
@@ -407,11 +437,257 @@ header {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
+/* 2025-01-17 14:00 KST: 참고자료 표시 개선을 위한 스타일 대폭 추가 */
 .reference-content {
   padding: 1.5rem;
   line-height: 1.8;
+  max-width: none;
 }
 
+.document-title {
+  color: #1e40af;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid #3b82f6;
+}
+
+.file-info {
+  background-color: #f8fafc;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.keywords-section {
+  margin-bottom: 2rem;
+}
+
+.keywords-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.keyword-tag {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.project-overview, .proposal-strategy, .report-objectives, 
+.table-of-contents, .content-summary, .key-findings, 
+.improvement-opportunities, .implementation-plan, .content-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #fafafa;
+  border-radius: 0.75rem;
+  border-left: 4px solid #3b82f6;
+}
+
+.project-overview h2, .proposal-strategy h2, .report-objectives h2,
+.table-of-contents h2, .content-summary h2, .key-findings h2,
+.improvement-opportunities h2, .implementation-plan h2, .content-section h2 {
+  color: #1e40af;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.info-item {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background-color: #f1f5f9;
+  border-radius: 0.375rem;
+}
+
+.subsection {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.subsection h4 {
+  color: #374151;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.objectives-list {
+  list-style: none;
+  padding: 0;
+}
+
+.objectives-list li {
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  border-left: 3px solid #10b981;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.objectives-list li:before {
+  content: "✓";
+  color: #10b981;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.toc-container {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.toc-major {
+  font-weight: bold;
+  color: #1e40af;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.toc-minor {
+  margin-left: 1rem;
+  margin-bottom: 0.25rem;
+  color: #4b5563;
+}
+
+.toc-hierarchical {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.toc-level-1 {
+  font-weight: bold;
+  color: #1e40af;
+  margin-bottom: 0.5rem;
+}
+
+.toc-level-2 {
+  margin-left: 1rem;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.toc-level-3 {
+  margin-left: 2rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.toc-level-4 {
+  margin-left: 3rem;
+  color: #9ca3af;
+  margin-bottom: 0.25rem;
+}
+
+.summary-item, .analysis-item {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.summary-item h4, .analysis-item h4 {
+  color: #1e40af;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.finding-item, .opportunity-item {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.finding-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  gap: 0.5rem;
+}
+
+.finding-icon {
+  font-size: 1.25rem;
+}
+
+.finding-type {
+  background-color: #dbeafe;
+  color: #1e40af;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.finding-title {
+  font-weight: 600;
+  color: #374151;
+}
+
+.finding-content, .opportunity-content {
+  color: #4b5563;
+  line-height: 1.7;
+}
+
+.opportunity-item h4 {
+  color: #059669;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.plan-section {
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.plan-section h3 {
+  color: #1e40af;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.plan-subsection {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+  border-left: 3px solid #3b82f6;
+}
+
+.plan-subsection h4 {
+  color: #374151;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* 기존 참고자료 스타일들 (호환성 유지) */
 .reference-content h2 {
   color: #1f2937;
   margin-bottom: 1rem;
