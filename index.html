@@ -46,9 +46,7 @@
       </div>
     </header>
 
-    <!-- 2025-01-16 13:00 KST: 메인 컨테이너 -->
-    <!-- 2025-01-17 11:00 KST: UI/UX 개선 - 자유 프롬프트 지원 추가 -->
-    <!-- 2025-01-17 12:00 KST: AX방법론에서 프롬프트 입력창 제거 -->
+    <!-- 2025-01-17 15:00 KST: 프롬프트 유지 및 지우기 버튼 추가 -->
     <div class="main-container flex-grow flex">
       <!-- 좌측 채팅 패널 -->
       <div class="chatbot-panel">
@@ -56,8 +54,6 @@
           {{ leftPanelTitle }}
         </h2>
 
-        <!-- 2025-01-16 13:30 KST: AX방법론 메뉴 -->
-        <!-- 2025-01-17 12:00 KST: AX방법론은 계층 메뉴만 표시, 프롬프트 입력창 제거 -->
         <div v-if="activeMenu === 'ax-methodology'" class="chatbot-panel-content-wrapper">
           <div class="panel-content">
             <ul v-if="axMethodology.length > 0" class="ax-methodology-list">
@@ -75,10 +71,7 @@
           </div>
         </div>
 
-        <!-- 2025-01-16 14:00 KST: 나머지 9개 메뉴 - 3단 레이아웃 -->
-        <!-- 2025-01-17 11:00 KST: 자유 프롬프트 항상 가능하도록 개선 -->
         <div v-else class="prompt-layout-container">
-          <!-- 상단: 프롬프트 그룹 버튼들 -->
           <div class="prompt-buttons-area">
             <div v-if="promptGroups.length > 0" class="prompt-group-buttons">
               <button 
@@ -90,32 +83,34 @@
                 {{ group.title }}
               </button>
             </div>
-            <!-- 2025-01-17 11:00 KST: 템플릿이 없어도 자유 프롬프트 사용 가능하다는 안내 -->
             <div v-else class="no-prompts-message">
               <p v-if="isLoadingPrompts" class="p-4 text-gray-600">템플릿을 불러오는 중...</p>
               <p v-else class="p-4 text-gray-600">미리 정의된 템플릿이 없습니다. 아래에서 자유롭게 프롬프트를 입력하세요.</p>
             </div>
           </div>
 
-          <!-- 2025-01-16 14:30 KST: 중간: 전송 버튼과 템플릿 정보 -->
-          <!-- 2025-01-17 11:00 KST: 항상 표시되도록 수정 -->
+          <!-- 2025-01-17 15:00 KST: 지우기 버튼 추가 -->
           <div class="template-info-bar">
             <div class="template-info-content">
+             <div class="action-buttons">
+                <button @click="clearInput" class="clear-btn-inline" title="프롬프트 지우기">
+                  <img src="/static/img/clear.jpg" alt="지우기">
+                </button>
+              </div>
               <span class="template-instruction" v-if="activePromptIndex !== null">
                 아래 템플릿의 하이라이트 부분을 직접 수정하여 프롬프트를 완성하세요.
               </span>
               <span class="template-instruction" v-else>
                 자유롭게 프롬프트를 입력하세요.
               </span>
-              <!-- 2025-01-17 10:30 KST: 전송 버튼을 submit.jpg 이미지로 변경 -->
-              <button @click="sendMessage" class="send-btn-inline">
-                <img src="/static/img/submit.jpg" alt="전송">
-              </button>
+              <div class="action-buttons">
+                <button @click="sendMessage" class="send-btn-inline" title="프롬프트 전송">
+                  <img src="/static/img/submit.jpg" alt="전송">
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- 2025-01-16 15:00 KST: 하단: 프롬프트 입력창 (스크롤 가능) -->
-          <!-- 2025-01-17 11:00 KST: 항상 표시되도록 수정 -->
           <div class="prompt-input-area-wrapper">
             <textarea 
               ref="chatInputRef"
