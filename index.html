@@ -18,8 +18,8 @@
           <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'ax-methodology' }" @click.prevent="setActiveMenu('ax-methodology')">AX방법론</a>
           <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Env_Analysis' }" @click.prevent="setActiveMenu('Env_Analysis')">환경분석</a>
           <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'TechEnv_Analysis' }" @click.prevent="setActiveMenu('TechEnv_Analysis')">기술환경분석</a>
-          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Biz_Analysis' }" @click.prevent="setActiveMenu('Biz_Analysis')">Biz 현황분석</a>
-          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'AXIT_Analysis' }" @click.prevent="setActiveMenu('AXIT_Analysis')">IT 현황분석</a>
+          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Biz_Analysis' }" @click.prevent="setActiveMenu('Biz_Analysis')">Biz요건분석</a>
+          <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'AXIT_Analysis' }" @click.prevent="setActiveMenu('AXIT_Analysis')">IT요건분석</a>
           <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Visioning' }" @click.prevent="setActiveMenu('Visioning')">Visioning</a>
           <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Target_Model' }" @click.prevent="setActiveMenu('Target_Model')">목표모델</a>
           <a href="#" class="main-menu-item text-gray-700 hover:text-blue-600 font-medium p-2 rounded-md transition duration-200" :class="{ 'active': activeMenu === 'Impl_Tasks' }" @click.prevent="setActiveMenu('Impl_Tasks')">이행과제</a>
@@ -46,68 +46,120 @@
       </div>
     </header>
 
+    <!-- 2025-01-16 13:00 KST: 메인 컨테이너 -->
     <div class="main-container flex-grow flex">
+      <!-- 좌측 채팅 패널 -->
       <div class="chatbot-panel">
         <h2 class="text-lg font-semibold text-gray-800 p-4 border-b border-gray-200 flex-shrink-0">
-            {{ leftPanelTitle }}
+          {{ leftPanelTitle }}
         </h2>
 
-        <div class="chatbot-panel-content-wrapper">
-            <div v-if="activeMenu === 'ax-methodology'" class="panel-content">
-                <ul v-if="axMethodology.length > 0" class="ax-methodology-list">
-                    <task-item
-                      v-for="task in axMethodology"
-                      :key="task.id"
-                      :task="task"
-                      :select-task="selectTask"
-                      :is-expanded="isExpanded"
-                      :selected-task="selectedTask"
-                      :depth="0"
-                    />
-                </ul>
-                 <p v-else class="text-gray-600 p-4">AX 방법론 메뉴를 로드 중이거나 실패했습니다.</p>
-            </div>
-
-            <div v-else class="left-panel-content">
-                <div v-if="promptGroups.length > 0" class="prompt-group-container">
-                    <div v-for="(group, index) in promptGroups" :key="index" class="prompt-group">
-                        <button @click="togglePrompt(index)" class="prompt-group-button">
-                            <span>{{ group.title }}</span>
-                            <img :src="activePromptIndex === index ? '/static/img/down-arrow.jpg' : '/static/img/right-arrow.jpg'" class="toggle-icon" alt="toggle">
-                        </button>
-                        <div v-if="activePromptIndex === index" class="prompt-template-wrapper">
-                            <div class="prompt-info-bar">
-                                <span>아래 템플릿의 하이라이트 부분을 수정하여 프롬프트를 완성하세요.</span>
-                                <button @click="sendPromptFromPanel" class="send-button">전송</button>
-                            </div>
-                            <div class="prompt-template-content" v-html="highlightEditable(group.template)" contenteditable="true" ref="promptContentRef">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <p v-else-if="isLoadingPrompts" class="p-4 text-gray-600">템플릿을 불러오는 중...</p>
-                <p v-else class="p-4 text-gray-600">선택된 메뉴에 대한 작업 단계가 없습니다.</p>
-            </div>
+        <!-- 2025-01-16 13:30 KST: AX방법론 메뉴 -->
+        <div v-if="activeMenu === 'ax-methodology'" class="chatbot-panel-content-wrapper">
+          <div class="panel-content">
+            <ul v-if="axMethodology.length > 0" class="ax-methodology-list">
+              <task-item
+                v-for="task in axMethodology"
+                :key="task.id"
+                :task="task"
+                :select-task="selectTask"
+                :is-expanded="isExpanded"
+                :selected-task="selectedTask"
+                :depth="0"
+              />
+            </ul>
+            <p v-else class="text-gray-600 p-4">AX 방법론 메뉴를 로드 중이거나 실패했습니다.</p>
+          </div>
         </div>
 
-        <div id="chatInputArea" class="chat-input-area">
-            <div class="file-upload-container">
-                <label for="file-upload" class="file-upload-label"> <img src="/static/img/upload.jpg" alt="Upload File" class="upload-icon"> <input type="file" id="file-upload" multiple @change="handleFileUpload" style="display: none;"> </label>
-                <span v-if="uploadedFiles.length > 0" class="file-count" @click="showFilePopup"> {{ uploadedFiles.length }} </span>
+        <!-- 2025-01-16 14:00 KST: 나머지 9개 메뉴 - 3단 레이아웃 -->
+        <div v-else class="prompt-layout-container">
+          <!-- 상단: 프롬프트 그룹 버튼들 -->
+          <div class="prompt-buttons-area">
+            <div v-if="promptGroups.length > 0" class="prompt-group-buttons">
+              <button 
+                v-for="(group, index) in promptGroups" 
+                :key="index"
+                @click="selectPromptGroup(index)" 
+                class="prompt-group-btn" 
+                :class="{ 'active': activePromptIndex === index }">
+                {{ group.title }}
+              </button>
             </div>
-            <textarea ref="chatInputRef" v-model="chatInput" @input="handleInput" @keydown.enter.prevent="sendMessage" placeholder="프롬프트를 입력하거나 템플릿을 선택하세요..."></textarea>
-            <button @click="sendMessage" class="submit-button"> <img src="/static/img/submit.jpg" alt="Submit" class="submit-icon"> </button>
+            <p v-else-if="isLoadingPrompts" class="p-4 text-gray-600">템플릿을 불러오는 중...</p>
+            <p v-else class="p-4 text-gray-600">프롬프트 템플릿이 없습니다.</p>
+          </div>
+
+          <!-- 2025-01-16 14:30 KST: 중간: 전송 버튼과 템플릿 정보 -->
+          <div v-if="activePromptIndex !== null" class="template-info-bar">
+            <div class="template-info-content">
+              <span class="template-instruction">아래 템플릿의 하이라이트 부분을 직접 수정하여 프롬프트를 완성하세요.</span>
+              <button @click="sendMessage" class="send-btn-inline">
+                <span>전송</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2025-01-16 15:00 KST: 하단: 프롬프트 입력창 (스크롤 가능) -->
+          <div class="prompt-input-area-wrapper">
+            <textarea 
+              ref="chatInputRef"
+              v-model="chatInput" 
+              @input="handleInput"
+              @keydown.ctrl.enter="sendMessage"
+              placeholder="위에서 템플릿을 선택하거나 직접 입력하세요..."
+              class="prompt-textarea-main"
+            ></textarea>
+          </div>
         </div>
       </div>
 
+      <!-- 중앙 작업 패널 -->
       <div class="workspace-panel rounded-lg shadow-inner">
+        <h2 class="text-lg font-semibold text-gray-800 p-4 border-b border-gray-200 flex-shrink-0">
+          작업 공간
+        </h2>
+        <div class="panel-content workspace-content-container">
+          <div v-if="isLoading" class="flex justify-center items-center h-full">
+            <div class="loading-spinner"></div>
+          </div>
+          <div v-else v-html="workspaceContent"></div>
         </div>
+      </div>
+
+      <!-- 우측 출처 패널 -->
       <div class="source-panel rounded-lg shadow-inner">
+        <h2 class="text-lg font-semibold text-gray-800 p-4 border-b border-gray-200 flex-shrink-0">
+          {{ showReferenceMaterials ? '참고 자료' : '출처 정보' }}
+        </h2>
+        <div class="panel-content">
+          <div v-if="showReferenceMaterials">
+            <div v-if="isLoadingReferences" class="p-4">
+              <div class="loading-spinner"></div>
+            </div>
+            <div v-else-if="referenceFiles.length > 0" class="reference-list">
+              <button 
+                v-for="(file, index) in referenceFiles" 
+                :key="index"
+                @click="displayReferenceContent(file)"
+                class="reference-item-button"
+              >
+                {{ file.original_file_name }}
+              </button>
+            </div>
+            <p v-else class="p-4 text-gray-600">참고 자료가 없습니다.</p>
+          </div>
+          <div v-else>
+            <div v-if="sourceInfo.length > 0" class="source-list">
+              <div v-for="(source, index) in sourceInfo" :key="index" class="source-item">
+                <span class="font-semibold">{{ source.type }}:</span> {{ source.info }}
+              </div>
+            </div>
+            <p v-else class="p-4 text-gray-600">출처 정보가 없습니다.</p>
+          </div>
         </div>
+      </div>
     </div>
-    
-    <div v-if="showPopup" class="file-popup-overlay" @click.self="hideFilePopup">
-        </div>
   </div>
 
   <script src="/static/script.js"></script>
