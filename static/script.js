@@ -2,6 +2,7 @@
 // 2025-01-16 15:30 KST: 3단 레이아웃 구조에 맞춘 전면 개편
 // 2025-01-17 11:00 KST: UI/UX 개선 - 자유 프롬프트 지원, 메뉴별 동작 통일
 // 2025-01-17 12:00 KST: AX방법론 메뉴에서 프롬프트 입력창 제거
+// 2025-01-17 15:00 KST: 프롬프트 전송 후 유지 및 명시적 지우기 버튼 추가
 
 const TaskItem = {
   name: 'TaskItem',
@@ -158,7 +159,6 @@ const app = createApp({
         nextTick(() => {
           document.querySelectorAll('.prompt-card').forEach(card => {
             card.addEventListener('click', (e) => {
-              // 2025-01-17 12:00 KST: AX방법론에서는 프롬프트 입력창이 없으므로 알림만 표시
               if (activeMenu.value === 'ax-methodology') {
                 alert('AX방법론에서는 템플릿을 클릭하여 직접 사용하실 수 있습니다.\n다른 메뉴에서 프롬프트를 입력해주세요.');
                 return;
@@ -177,14 +177,13 @@ const app = createApp({
     };
 
     // 2025-01-16 17:00 KST: 이벤트 핸들러들
-    // 2025-01-17 11:00 KST: 메뉴별 동작 통일 및 자유 프롬프트 지원
-    // 2025-01-17 12:00 KST: AX방법론에서는 프롬프트 입력창 제거
+    // 2025-01-17 15:00 KST: 메뉴 변경시 프롬프트 유지하도록 수정
     const setActiveMenu = async (menuId) => {
       activeMenu.value = menuId;
       leftPanelTitle.value = mainTitleMap[menuId] || 'AX 방법론';
       workspaceContent.value = '';
       sourceInfo.value = [];
-      chatInput.value = '';
+      // chatInput.value = ''; // 2025-01-17 15:00 KST: 제거
 
       if (menuId === 'ax-methodology') {
         promptGroups.value = [];
@@ -219,7 +218,6 @@ const app = createApp({
 
     const isExpanded = (taskId) => !!expandedTasks[taskId];
 
-    // 2025-01-16 17:30 KST: 프롬프트 그룹 선택 - 토글 방식
     const selectPromptGroup = (index) => {
       if (activePromptIndex.value === index) {
         activePromptIndex.value = null;
@@ -245,13 +243,13 @@ const app = createApp({
       </div>`;
     };
 
-    // 2025-01-16 18:00 KST: 메시지 전송
+    // 2025-01-17 15:00 KST: 프롬프트 전송 후 자동 지우기 제거
     const sendMessage = async () => {
       const prompt = chatInput.value.trim();
       if (!prompt) return;
 
       const originalPrompt = chatInput.value;
-      chatInput.value = '';
+      // chatInput.value = ''; // 2025-01-17 15:00 KST: 제거
       isLoading.value = true;
       workspaceContent.value = '';
 
@@ -279,12 +277,19 @@ const app = createApp({
       }
     };
 
-    // 2025-01-16 18:30 KST: 입력 핸들러 (자동 리사이즈 제거)
+    // 2025-01-17 15:00 KST: 새로 추가 - 명시적 프롬프트 지우기 함수
+    const clearInput = () => {
+      chatInput.value = '';
+      activePromptIndex.value = null;
+      nextTick(() => {
+        chatInputRef.value?.focus();
+      });
+    };
+
     const handleInput = () => {
       // 필요시 추가 기능 구현
     };
 
-    // 2025-01-16 19:00 KST: 참고자료 토글 감시
     watch(showReferenceMaterials, (newValue) => {
       if (newValue) {
         fetchReferenceFiles(activeMenu.value);
@@ -304,7 +309,7 @@ const app = createApp({
       expandedTasks, promptGroups, activePromptIndex, isLoadingPrompts,
       
       sendMessage, handleInput, setActiveMenu, selectTask, isExpanded,
-      displayReferenceContent, selectPromptGroup
+      displayReferenceContent, selectPromptGroup, clearInput // 2025-01-17 15:00 KST: 추가
     };
   }
 });
