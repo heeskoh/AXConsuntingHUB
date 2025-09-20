@@ -256,6 +256,40 @@ header {
   font-weight: 500;
 }
 
+/* 2025-01-17 15:00 KST: 액션 버튼들을 담는 컨테이너 */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* 2025-01-17 15:00 KST: 지우기 버튼 스타일 */
+.clear-btn-inline {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-btn-inline img {
+  width: 32px;
+  height: 32px;
+  transition: transform 0.2s;
+}
+
+.clear-btn-inline:hover img {
+  transform: scale(1.1);
+}
+
+.clear-btn-inline:active img {
+  transform: scale(0.95);
+}
+
+
 /* 2025-01-17 10:30 KST: 전송 버튼을 이미지로 변경 */
 /* 2025-01-17 12:30 KST: 전송 버튼 크기도 조금 줄임 */
 .send-btn-inline {
