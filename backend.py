@@ -1,3 +1,6 @@
+# backend.py
+# 2025-01-17 02:00 KST: 참고자료 상세 표시 기능 완전 구현
+
 import os
 import json
 import logging
@@ -9,7 +12,6 @@ import fitz
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
-from werkzeug.utils import secure_filename # 파일 이름 유지를 위해 사용 안 함
 
 # 내부 모듈 임포트
 from utils.exceptions import APIException
@@ -20,7 +22,7 @@ from agents.gemini_agent import GeminiAgent
 # .env 파일에서 환경 변수 로드
 load_dotenv()
 
-# --- 경로 설정 ---
+# 경로 설정
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_FOLDER = os.path.join(BASE_DIR, 'static')
 DATA_FOLDER = os.path.join(BASE_DIR, 'data')
@@ -78,19 +80,18 @@ def serve_index():
 
 @app.route('/api/chat', methods=['POST'])
 async def chat_endpoint():
-    # 이 함수의 내용은 변경되지 않았습니다.
     if not router:
         return jsonify({"error": "서비스 준비 중입니다. 잠시 후 다시 시도해주세요."}), 503
     if 'prompt' not in request.form:
         return jsonify({"error": "프롬프트가 비어있습니다."}), 400
+    
     try:
-        # ... (기존 채팅 처리 로직은 그대로 유지) ...
         data = request.form
         prompt = data.get('prompt', '')
         use_validation = data.get('use_validation', 'false').lower() == 'true'
         chat_history_str = data.get('chat_history', '[]')
         chat_history = json.loads(chat_history_str)
-        llm_model_choice = data.get('llm_model_choice', 'openai')
+        llm_model_choice = data.get('llm_model_choice', 'Gemini')
         files = request.files.getlist('files')
 
         file_contents = []
@@ -114,7 +115,8 @@ async def chat_endpoint():
 
         for path, dir_path in temp_files:
             try:
-                os.remove(path); os.rmdir(dir_path)
+                os.remove(path)
+                os.rmdir(dir_path)
             except OSError as e:
                 logger.error(f"Error cleaning up temp file {path}: {e}")
 
@@ -132,7 +134,7 @@ async def chat_endpoint():
         return jsonify({"error": f"내부 서버 오류가 발생했습니다: {str(e)}"}), 500
 
 
-# --- AX 방법론 관련 API 라우트 (복원된 부분) ---
+# --- AX 방법론 관련 API 라우트 ---
 @app.route('/api/ax-methodology')
 def get_ax_methodology():
     filepath = os.path.join(BASE_DIR, 'ax_methodology_tasks.json')
@@ -142,9 +144,7 @@ def get_ax_methodology():
     except FileNotFoundError:
         return jsonify({"error": "AX Methodology tasks file not found"}), 404
 
-# ===================================================================
-# 2025-09-18 09:45 KST: 누락되었던 API 라우트 복원
-# ===================================================================
+
 @app.route('/api/prompt-templates/<string:task_id>')
 def get_prompt_templates_for_task(task_id):
     """최하위 Task에 대한 프롬프트 템플릿 JSON 파일을 반환합니다."""
@@ -161,43 +161,15 @@ def get_prompt_templates_for_task(task_id):
         logger.error(f"Error reading prompt template file for task {task_id}: {e}")
         return jsonify({"error": "Error reading prompt template file"}), 500
 
-@app.route('/api/task-files/<string:task_id>')
-def get_task_files(task_id):
-    """2단계 Task와 관련된 파일 목록을 반환합니다."""
-    folder_name = f"{task_id}_files"
-    folder_path = os.path.join(DATA_FOLDER, folder_name)
-    if not os.path.isdir(folder_path):
-        return jsonify([])
-    
-    files_info = []
-    try:
-        for filename in os.listdir(folder_path):
-            if filename.endswith('.json'):
-                filepath = os.path.join(folder_path, filename)
-                try:
-                    with open(filepath, 'r', encoding='utf-8') as f:
-                        content = json.load(f)
-                        files_info.append({
-                            "type": "Reference File",
-                            "info": content.get("title", filename),
-                            "summary": content.get("summary", ""),
-                            "url": f"/data/{folder_name}/{filename}"
-                        })
-                except Exception as e:
-                    logger.error(f"Error reading file {filepath}: {e}")
-        return jsonify(files_info)
-    except Exception as e:
-        return jsonify({"error": "Error listing task files"}), 500
 
-# ===================================================================
-# 2025-09-18 23:10 KST: API 반환 키 값을 original_file_name으로 통일
-# ===================================================================
-
+# 2025-01-17 02:30 KST: 참고자료 API - 전체 내용 표시
 @app.route('/api/reference-materials/<string:folder_name>')
 def get_reference_materials(folder_name):
-    """지정된 폴더 내의 Abstract_*.json 파일 목록과 내용을 반환합니다."""
+    """지정된 폴더 내의 Abstract_*.json 파일 목록과 전체 내용을 반환합니다."""
     folder_path = os.path.join(DATA_FOLDER, folder_name)
+    
     if not os.path.isdir(folder_path):
+        logger.warning(f"Reference folder not found: {folder_path}")
         return jsonify([])
 
     materials = []
@@ -208,65 +180,109 @@ def get_reference_materials(folder_name):
                 try:
                     with open(filepath, 'r', encoding='utf-8') as f:
                         content = json.load(f)
+                        
+                        original_name = content.get('original_file_name', 
+                                                   content.get('원본이름', filename))
+                        
+                        summary_html = content.get('summary_html', '')
+                        if not summary_html:
+                            summary_html = generate_comprehensive_summary_html(content)
+                        
                         materials.append({
                             "json_name": filename,
-                            # FIX: 키 이름을 'original_file_name'으로 수정
-                            "original_file_name": content.get("original_file_name", filename), 
-                            "summary_html": content.get("summary_html", "<p>요약 내용이 없습니다.</p>")
+                            "original_file_name": original_name,
+                            "summary_html": summary_html
                         })
+                except json.JSONDecodeError as e:
+                    logger.error(f"JSON decode error in {filepath}: {e}")
                 except Exception as e:
-                    logger.error(f"참고자료 파일을 읽는 중 오류 발생 {filepath}: {e}")
+                    logger.error(f"Error reading reference file {filepath}: {e}")
         
+        materials.sort(key=lambda x: x['json_name'])
         return jsonify(materials)
+    
     except Exception as e:
-        logger.error(f"참고자료 목록을 가져오는 중 오류 발생 {folder_name}: {e}")
-        return jsonify({"error": "참고자료 목록을 가져오는 중 오류 발생"}), 500
+        logger.error(f"Error listing reference materials in {folder_name}: {e}")
+        return jsonify({"error": "참고자료 목록 조회 실패"}), 500
 
 
-# --- 데이터 파일 직접 서빙 라우트 ---
+# 2025-01-17 03:00 KST: 전체 내용을 포함하는 HTML 생성
+def generate_comprehensive_summary_html(content):
+    """JSON 내용을 기반으로 전체 섹션을 포함한 HTML 요약을 생성합니다."""
+    html = '<div class="reference-content">'
+    
+    # 제목
+    if 'reportTitle' in content:
+        html += f'<h2>{content["reportTitle"]}</h2>'
+    elif 'report_title' in content:
+        html += f'<h2>{content["report_title"]}</h2>'
+    
+    # 날짜
+    if 'reportDate' in content:
+        html += f'<p class="text-sm text-gray-600 mb-4">작성일: {content["reportDate"]}</p>'
+    
+    # 보고서 목적
+    if 'reportObjective' in content:
+        html += f'<div class="bg-blue-50 p-4 rounded-lg mb-4">'
+        html += f'<h3 class="font-bold mb-2">보고서 목적</h3>'
+        html += f'<p>{content["reportObjective"]}</p></div>'
+    elif 'report_objective' in content:
+        html += f'<div class="bg-blue-50 p-4 rounded-lg mb-4">'
+        html += f'<h3 class="font-bold mb-2">보고서 목적</h3>'
+        html += f'<p>{content["report_objective"]}</p></div>'
+    
+    # 키워드
+    if 'keywords' in content and isinstance(content['keywords'], list):
+        html += '<div class="mb-4"><h3 class="font-bold mb-2">주요 키워드</h3><div class="flex flex-wrap gap-2">'
+        for keyword in content['keywords'][:15]:
+            html += f'<span class="px-3 py-1 bg-gray-100 rounded-full text-sm">{keyword}</span>'
+        html += '</div></div>'
+    
+    # 섹션 내용
+    if 'sections' in content and isinstance(content['sections'], list):
+        html += '<div class="mt-6"><h3 class="font-bold text-lg mb-3">상세 내용</h3>'
+        html += render_sections(content['sections'])
+        html += '</div>'
+    
+    html += '</div>'
+    return html
+
+
+# 2025-01-17 03:30 KST: 섹션 재귀 렌더링
+def render_sections(sections, level=0):
+    """섹션을 재귀적으로 HTML로 렌더링합니다."""
+    html = ''
+    
+    for section in sections:
+        if isinstance(section, dict):
+            title = section.get('title', section.get('section_title', ''))
+            if title:
+                margin = f'ml-{level * 4}' if level > 0 else ''
+                html += f'<h4 class="font-semibold mt-3 mb-2 {margin}">{title}</h4>'
+            
+            summary = section.get('summary', section.get('content', ''))
+            if summary:
+                if isinstance(summary, str):
+                    margin = f'ml-{level * 4}' if level > 0 else ''
+                    html += f'<p class="mb-2 {margin}">{summary}</p>'
+                elif isinstance(summary, list):
+                    margin = f'ml-{level * 4}' if level > 0 else ''
+                    html += f'<ul class="list-disc list-inside mb-2 {margin}">'
+                    for item in summary:
+                        html += f'<li>{item}</li>'
+                    html += '</ul>'
+            
+            subsections = section.get('subSections', section.get('subsections', section.get('subSubSections', [])))
+            if subsections and isinstance(subsections, list):
+                html += render_sections(subsections, level + 1)
+    
+    return html
+
+
+# --- 데이터 파일 서빙 ---
 @app.route('/data/<path:subpath>')
 def serve_data_files(subpath):
     return send_from_directory(DATA_FOLDER, subpath)
-#--------------------------------------------------------------------
-
-# ===================================================================
-# 2025-09-19 21:05 KST: get_prompt_template
-# ===================================================================
-
-@app.route('/api/get_prompt_template', methods=['POST'])
-def get_prompt_template():
-    """
-    요청된 경로의 프롬프트 템플릿 JSON 파일을 읽어 반환합니다.
-    보안을 위해 'data/'로 시작하는 경로만 허용합니다.
-    """
-    data = request.json
-    file_path = data.get('path')
-
-    if not file_path or not file_path.startswith('data/'):
-        return jsonify({"error": "Invalid or unauthorized file path"}), 400
-
-    # os.path.abspath를 사용하여 정규화된 경로를 얻고, 프로젝트 루트 내에 있는지 확인합니다.
-    base_dir = os.path.abspath(os.path.dirname(__file__))
-    safe_path = os.path.abspath(os.path.join(base_dir, file_path))
-
-    if not safe_path.startswith(base_dir):
-        return jsonify({"error": "Directory traversal attempt detected"}), 400
-
-    try:
-        with open(safe_path, 'r', encoding='utf-8') as f:
-            return jsonify(json.load(f))
-    except FileNotFoundError:
-        return jsonify({"error": "Prompt template not found"}), 404
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-app.route('/api/execute', methods=['POST'])
-def execute_task():
-    data = request.json
-    task_id = data.get('task_id')
-    user_prompt = data.get('prompt')
-
-# --------------------------------------------------------------------
 
 
 if __name__ == '__main__':
