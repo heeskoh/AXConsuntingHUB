@@ -1,5 +1,7 @@
 // static/script.js
 // 2025-01-16 15:30 KST: 3단 레이아웃 구조에 맞춘 전면 개편
+// 2025-01-17 11:00 KST: UI/UX 개선 - 자유 프롬프트 지원, 메뉴별 동작 통일
+// 2025-01-17 12:00 KST: AX방법론 메뉴에서 프롬프트 입력창 제거
 
 const TaskItem = {
   name: 'TaskItem',
@@ -156,6 +158,11 @@ const app = createApp({
         nextTick(() => {
           document.querySelectorAll('.prompt-card').forEach(card => {
             card.addEventListener('click', (e) => {
+              // 2025-01-17 12:00 KST: AX방법론에서는 프롬프트 입력창이 없으므로 알림만 표시
+              if (activeMenu.value === 'ax-methodology') {
+                alert('AX방법론에서는 템플릿을 클릭하여 직접 사용하실 수 있습니다.\n다른 메뉴에서 프롬프트를 입력해주세요.');
+                return;
+              }
               chatInput.value = e.currentTarget.dataset.promptTemplate;
               chatInputRef.value?.focus();
             });
@@ -170,6 +177,8 @@ const app = createApp({
     };
 
     // 2025-01-16 17:00 KST: 이벤트 핸들러들
+    // 2025-01-17 11:00 KST: 메뉴별 동작 통일 및 자유 프롬프트 지원
+    // 2025-01-17 12:00 KST: AX방법론에서는 프롬프트 입력창 제거
     const setActiveMenu = async (menuId) => {
       activeMenu.value = menuId;
       leftPanelTitle.value = mainTitleMap[menuId] || 'AX 방법론';
@@ -179,6 +188,7 @@ const app = createApp({
 
       if (menuId === 'ax-methodology') {
         promptGroups.value = [];
+        activePromptIndex.value = null;
         if (axMethodology.value.length === 0) {
           await fetchAxMethodology();
         }
